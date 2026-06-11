@@ -1,0 +1,13 @@
+{
+  "name": "field-manual",
+  "owner": {
+    "name": "Brandon (saucy-tech)"
+  },
+  "plugins": [
+    {
+      "name": "field-manual",
+      "source": "./",
+      "description": "Single-file interactive HTML field manual per project — your UI for your coding agent."
+    }
+  ]
+}

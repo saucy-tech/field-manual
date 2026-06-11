@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- FIELD MANUAL TEMPLATE — see format.md for the normative contract.
+     Replace ALL-CAPS placeholders. DOC_ID is immutable after first ship. -->
+<title>HOMELAB-01 · Homelab Reboot Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4f0e6;
+    --paper-dark: #ebe5d6;
+    --ink: #1c1a16;
+    --ink-soft: #4a463d;
+    --rule: #c9c1ac;
+    --accent: #c8501e;       /* per-project hue allowed; structure is locked */
+    --accent-soft: #f3d9cd;
+    --ok: #2e6b3f;
+    --ok-soft: #d9e8dc;
+    --wait: #8a6d1c;
+    --wait-soft: #f0e6c8;
+    --bar: #f6821f;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --display: "Fraunces", Georgia, serif;
+    --body: "Public Sans", -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(200,80,30,0.04), transparent 40%),
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(28,26,22,0.035) 28px);
+    color: var(--ink);
+    font-family: var(--body);
+    line-height: 1.55;
+    font-size: 15.5px;
+  }
+  .frame { max-width: 1060px; margin: 0 auto; padding: 0 28px 120px; }
+
+  header {
+    border-bottom: 3px double var(--ink);
+    padding: 40px 0 22px;
+    margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap;
+  }
+  .doc-id { font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em; color: var(--ink-soft); text-transform: uppercase; }
+  h1 { font-family: var(--display); font-weight: 900; font-size: clamp(34px, 5.5vw, 56px); line-height: .98; letter-spacing: -0.02em; }
+  h1 em { font-style: italic; font-weight: 300; color: var(--accent); }
+  .stamp {
+    font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .18em;
+    border: 2.5px solid var(--accent); color: var(--accent); padding: 7px 13px;
+    transform: rotate(-3.5deg); text-transform: uppercase; white-space: nowrap;
+    box-shadow: 1px 1px 0 var(--accent-soft);
+  }
+  nav { display: flex; gap: 2px; flex-wrap: wrap; margin: 14px 0 44px; font-family: var(--mono); font-size: 12px; }
+  nav a { color: var(--ink-soft); text-decoration: none; padding: 7px 12px; border: 1px solid transparent; }
+  nav a:hover { border-color: var(--ink); color: var(--ink); background: var(--paper-dark); }
+  nav a::before { content: "§ "; color: var(--accent); }
+
+  section { margin-bottom: 72px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; border-bottom: 1.5px solid var(--ink); padding-bottom: 8px; margin-bottom: 24px; }
+  .sec-num { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 600; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 27px; letter-spacing: -0.01em; }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 26px 0 10px; }
+  p { max-width: 72ch; margin-bottom: 12px; color: var(--ink-soft); }
+  p strong, li strong { color: var(--ink); }
+  .lede { font-size: 17.5px; color: var(--ink); }
+  code { font-family: var(--mono); font-size: .88em; background: var(--paper-dark); padding: 1px 5px; border: 1px solid var(--rule); }
+  a { color: var(--accent); }
+  ul.plain { margin: 0 0 14px 20px; color: var(--ink-soft); }
+  ul.plain li { margin-bottom: 6px; max-width: 70ch; }
+
+  .verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 22px 0; }
+  .verdict { border: 1.5px solid var(--ink); background: #fffdf7; padding: 18px 18px 16px; position: relative; }
+  .verdict::after { content: ""; position: absolute; inset: 4px; border: 1px solid var(--rule); pointer-events: none; }
+  .verdict .q { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+  .verdict .a { font-family: var(--display); font-size: 30px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+  .verdict .a small { font-size: 14px; font-weight: 300; font-style: italic; }
+  .verdict .why { font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 14px 0 22px; background: #fffdf7; }
+  th { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; text-align: left; border-bottom: 2px solid var(--ink); padding: 9px 12px; }
+  td { border-bottom: 1px solid var(--rule); padding: 9px 12px; vertical-align: top; }
+  tr:last-child td { border-bottom: 1.5px solid var(--ink); }
+  td.num, th.num { font-family: var(--mono); white-space: nowrap; }
+  .win { background: var(--ok-soft); font-weight: 600; }
+
+  .phase { border: 1.5px solid var(--ink); background: #fffdf7; margin-bottom: 26px; }
+  .phase-head {
+    display: flex; align-items: center; gap: 14px; padding: 13px 18px;
+    background: var(--ink); color: var(--paper); flex-wrap: wrap; cursor: pointer; user-select: none;
+  }
+  .phase-head .chev { font-family: var(--mono); transition: transform .25s; }
+  .phase.collapsed .chev { transform: rotate(-90deg); }
+  .phase.collapsed .task { display: none; }
+  .phase-head .pnum { font-family: var(--mono); font-size: 11px; color: var(--bar); letter-spacing: .12em; }
+  .phase-head .ptitle { font-family: var(--display); font-size: 18px; font-weight: 600; flex: 1; }
+  .phase-head .pcount { font-family: var(--mono); font-size: 11.5px; opacity: .75; }
+  .task { display: flex; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+  .task:last-child { border-bottom: none; }
+  .task.done { background: var(--ok-soft); }
+  .task.done .t-title { text-decoration: line-through; text-decoration-thickness: 1.5px; color: var(--ink-soft); }
+  .task.blocked { opacity: .45; }
+  .task input[type="checkbox"] {
+    appearance: none; width: 21px; height: 21px; min-width: 21px; border: 2px solid var(--ink);
+    background: #fffdf7; cursor: pointer; margin-top: 2px; position: relative;
+  }
+  .task input[type="checkbox"]:disabled { cursor: not-allowed; border-style: dashed; }
+  .task input[type="checkbox"]:checked { background: var(--ok); border-color: var(--ok); }
+  .task input[type="checkbox"]:checked::after {
+    content: "✓"; position: absolute; inset: 0; display: grid; place-items: center;
+    color: #fff; font-size: 14px; font-weight: 700;
+  }
+  .t-body { flex: 1; min-width: 0; }
+  .t-title { font-weight: 600; font-size: 14.5px; cursor: pointer; }
+  .t-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .t-detail { font-size: 13px; color: var(--ink-soft); margin-top: 6px; max-width: 70ch; }
+  .t-actions { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; cursor: pointer;
+    border: 1px solid var(--ink-soft); background: transparent; color: var(--ink-soft); padding: 4px 10px;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .t-note { width: 100%; margin-top: 8px; font-family: var(--mono); font-size: 12px; border: 1px dashed var(--rule);
+    background: var(--paper); padding: 7px 10px; color: var(--ink); resize: vertical; min-height: 34px; display: none; }
+  .t-note.visible, .t-note:not(:placeholder-shown) { display: block; }
+  .badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 2.5px 8px; text-transform: uppercase; font-weight: 600; }
+  .badge.owner-you { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .badge.owner-agent { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok); }
+  .badge.owner-both { background: var(--wait-soft); color: var(--wait); border: 1px solid var(--wait); }
+
+  .console {
+    position: sticky; bottom: 18px; z-index: 50; margin-top: 40px;
+    border: 2px solid var(--ink); background: var(--ink); color: var(--paper);
+    padding: 16px 20px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    box-shadow: 0 12px 30px rgba(28,26,22,.25);
+  }
+  .console .label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--bar); }
+  .console .progress { flex: 1; min-width: 180px; }
+  .bar { height: 9px; background: rgba(244,240,230,.18); position: relative; }
+  .bar i { position: absolute; inset: 0 auto 0 0; background: var(--bar); transition: width .4s; }
+  .console .pct { font-family: var(--mono); font-size: 12.5px; }
+  .btn {
+    font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .05em;
+    background: var(--bar); color: var(--ink); border: none; padding: 11px 18px; cursor: pointer;
+  }
+  .btn:hover { filter: brightness(1.1); }
+  .btn.ghost { background: transparent; color: var(--paper); border: 1px solid rgba(244,240,230,.5); }
+  .toast {
+    position: fixed; bottom: 100px; right: 30px; background: var(--ok); color: #fff;
+    font-family: var(--mono); font-size: 12.5px; padding: 12px 18px; opacity: 0;
+    transform: translateY(8px); transition: all .3s; pointer-events: none; z-index: 99;
+  }
+  .toast.show { opacity: 1; transform: none; }
+
+  .howto { border: 1.5px dashed var(--accent); background: var(--accent-soft); padding: 18px 22px; margin: 20px 0; }
+  .howto .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .howto ol { margin: 8px 0 0 20px; font-size: 13.5px; }
+  .howto li { margin-bottom: 4px; }
+
+  .footnote { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); border-top: 1px solid var(--rule); padding-top: 14px; margin-top: 50px; }
+  .footnote a { color: var(--ink-soft); }
+
+  @media print {
+    .console, .toast, nav { display: none; }
+    body { background: #fff; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header>
+  <div>
+    <div class="doc-id">Doc HOMELAB-01 · Rev B · 2026-06-11 · alex ops</div>
+    <h1>Homelab Reboot<br><em>Field Manual</em></h1>
+  </div>
+  <div class="stamp">Live document — agent-tracked</div>
+</header>
+
+<nav>
+  <a href="#s1">Old box or new box</a>
+  <a href="#tasks">Task board</a>
+  <a href="#protocol">Agent protocol</a>
+</nav>
+
+<div class="howto">
+  <div class="k">How this file works — your UI for the agent</div>
+  <ol>
+    <li>Check tasks off as they complete; add notes in the ✎ fields. Everything saves to this browser (localStorage).</li>
+    <li>Hit <strong>COPY STATUS FOR AGENT</strong> (bottom bar) and paste the block into your agent session (Claude Code, Codex, or any harness running this skill) — that's how the agent reads your state and picks up the next task.</li>
+    <li>Each task has a <strong>⌘ copy prompt</strong> chip: a ready-to-paste instruction for that specific task.</li>
+    <li>The agent updates this file as work lands. Refreshing never loses your checkmarks or notes — they live in the browser, not the file.</li>
+  </ol>
+</div>
+
+<!-- ============ §1..§n: decision sections. Verdict cards for one-line answers,
+     tables for comparisons. Replace this example. ============ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">§1</span><h2>Keep the old box or buy the mini PC?</h2></div>
+  <p class="lede"><strong>Buy the mini PC.</strong> The 2014 tower idles at 110W; the N100 mini idles at 9W. Power savings alone repay the hardware in ~14 months, and everything moves to Docker Compose either way.</p>
+  <div class="verdicts">
+    <div class="verdict">
+      <div class="q">Hardware cost</div>
+      <div class="a">$329 <small>once</small></div>
+      <div class="why">16GB N100 mini PC + 2TB NVMe. The tower becomes a cold-storage backup target.</div>
+    </div>
+    <div class="verdict">
+      <div class="q">Power saved</div>
+      <div class="a">~$24<small>/mo</small></div>
+      <div class="why">110W → 9W idle at $0.24/kWh. Pays for itself by month 14.</div>
+    </div>
+    <div class="verdict">
+      <div class="q">Services to migrate</div>
+      <div class="a">7</div>
+      <div class="why">Jellyfin, Pi-hole, Home Assistant, Vaultwarden, Syncthing, Uptime Kuma, Paperless.</div>
+    </div>
+  </div>
+  <table>
+    <tr><th>Service</th><th>State to move</th><th class="num">Downtime budget</th></tr>
+    <tr><td>Vaultwarden</td><td>SQLite + attachments (rsync, verify hash)</td><td class="num">5 min</td></tr>
+    <tr class="win"><td>Pi-hole</td><td>Teleporter export — migrate FIRST, it is the DNS for everything else</td><td class="num">1 min</td></tr>
+    <tr><td>Jellyfin</td><td>Config only; media stays on the NAS share</td><td class="num">whenever</td></tr>
+  </table>
+</section>
+
+<!-- ============ Task board ============ -->
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">§2</span><h2>Task board</h2></div>
+  <p>State as written by the agent on <strong>2026-06-11</strong>. Owner badges: <span class="badge owner-you">you</span> needs your hands/decisions, <span class="badge owner-agent">agent</span> paste the prompt and the agent does it, <span class="badge owner-both">joint</span> agent drives, you watch/approve. Click a phase header to collapse it. Dimmed tasks are blocked by earlier ones.</p>
+  <div id="board"></div>
+</section>
+
+<!-- ============ Agent protocol ============ -->
+<section id="protocol">
+  <div class="sec-head"><span class="sec-num">§3</span><h2>Agent protocol</h2></div>
+  <ul class="plain">
+    <li><strong>Status sync:</strong> COPY STATUS FOR AGENT → paste into any agent session. The agent reconciles, does the next agent-owned tasks, and ships an updated revision of this file.</li>
+    <li><strong>Single task:</strong> use a task's ⌘ chip — the prompt carries paths and context so a fresh session needs nothing else.</li>
+    <li><strong>Standing rails:</strong> the agent never changes DNS, never wipes the old tower, and never rotates Vaultwarden secrets without the matching go-task checked.</li>
+    <li><strong>File home:</strong> <code>~/projects/homelab-reboot/index.html</code> · memory: <code>homelab-reboot</code>.</li>
+  </ul>
+  <div class="footnote">
+    Facts verified 2026-06-11: idle wattage measured at the wall; mini PC price from the order receipt.
+  </div>
+</section>
+
+<div class="console">
+  <span class="label">Agent console</span>
+  <div class="progress"><div class="bar"><i id="bar"></i></div></div>
+  <span class="pct" id="pct">0/0</span>
+  <button class="btn" id="copyStatus">COPY STATUS FOR AGENT</button>
+  <button class="btn ghost" id="resetState" title="Clears checkmarks + notes in this browser">reset</button>
+</div>
+<div class="toast" id="toast">copied — paste into your agent session</div>
+
+<script>
+// DOC_ID doubles as the localStorage key. Immutable after first ship.
+const DOC_ID = "HOMELAB-01";
+const FILE_HOME = "~/projects/homelab-reboot/index.html";
+
+// The TASKS array is the only thing the agent edits on reconcile.
+// Schema: see references/format.md §5. ids append-only; blockedBy optional.
+const TASKS = [
+  { phase: "P1 · Hardware + base OS", items: [
+    { id: "p1-1", owner: "you", title: "Mini PC delivered and on the bench", meta: "order #8841 · ETA Thursday", detail: "Nothing moves until the box exists.", prompt: "" },
+    { id: "p1-2", owner: "both", title: "Install Debian 13 + Docker, harden SSH", meta: "static IP 10.0.0.20 · key-only auth", blockedBy: ["p1-1"], detail: "Agent writes the install checklist and compose scaffolding; you press the buttons at the console.", prompt: "Drive HOMELAB-01 task p1-2: Debian 13 + Docker base setup on the new mini PC. I will run console steps as you hand them to me." },
+    { id: "p1-3", owner: "agent", title: "Write compose files for all 7 services", meta: "one stack per service · shared .env pattern", blockedBy: ["p1-2"], detail: "Ported from the old tower's run commands; volumes mapped to /srv.", prompt: "Do HOMELAB-01 task p1-3: write Docker Compose files for the 7 services listed in §1, mirroring the old tower's configs (file: ~/projects/homelab-reboot/index.html)." }
+  ]},
+  { phase: "P2 · Migrate services", items: [
+    { id: "p2-1", owner: "both", title: "Pi-hole first — DNS for everything else", meta: "teleporter export/import · 1 min window", blockedBy: ["p1-3"], detail: "Router DHCP repointed only after import verified.", prompt: "Drive HOMELAB-01 task p2-1: migrate Pi-hole via teleporter to the new box and verify before I repoint DHCP." },
+    { id: "p2-2", owner: "both", title: "Vaultwarden — rsync, hash-verify, cutover", meta: "sqlite + attachments · 5 min window", blockedBy: ["p2-1"], detail: "Old instance goes read-only first; clients re-sync after.", prompt: "Drive HOMELAB-01 task p2-2: Vaultwarden migration with hash verification, per the §1 table." },
+    { id: "p2-3", owner: "agent", title: "Remaining five services", meta: "jellyfin · HA · syncthing · kuma · paperless", blockedBy: ["p2-2"], detail: "No hard downtime budgets; verify each behind Tailscale before moving on.", prompt: "Do HOMELAB-01 task p2-3: migrate the remaining five services and verify each, reporting per-service status." }
+  ]},
+  { phase: "P3 · Decommission", items: [
+    { id: "p3-1", owner: "agent", title: "7-day stability watch", meta: "uptime kuma alerts · disk + temp graphs", blockedBy: ["p2-3"], detail: "Any flapping service resets the clock.", prompt: "Do HOMELAB-01 task p3-1: review the week of Uptime Kuma + node metrics on the new box and report stability." },
+    { id: "p3-2", owner: "you", title: "Wipe the old tower → cold backup target", meta: "IRREVERSIBLE — rails require this checked explicitly", blockedBy: ["p3-1"], detail: "The agent will never do this one. Your hands, your call.", prompt: "" }
+  ]}
+];
+
+const KEY = DOC_ID;
+const COLLAPSE_KEY = DOC_ID + ":collapsed";
+const board = document.getElementById("board");
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function state() { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
+function collapsed() { return JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "{}"); }
+
+function isBlocked(t) {
+  if (!t.blockedBy || !t.blockedBy.length) return false;
+  const s = state();
+  return t.blockedBy.some(id => !(s[id] && s[id].done));
+}
+
+function build() {
+  board.innerHTML = "";
+  const saved = state(), coll = collapsed();
+  TASKS.forEach((group, gi) => {
+    const ph = document.createElement("div");
+    ph.className = "phase" + (coll[gi] ? " collapsed" : "");
+    ph.dataset.gi = gi;
+    const [pnum, ptitle] = group.phase.split(" · ");
+    const head = document.createElement("div");
+    head.className = "phase-head";
+    head.innerHTML = `<span class="chev">▾</span><span class="pnum">${esc(pnum)}</span>
+                      <span class="ptitle">${esc(ptitle)}</span><span class="pcount"></span>`;
+    ph.appendChild(head);
+    group.items.forEach(t => {
+      const row = document.createElement("div");
+      row.className = "task";
+      row.dataset.id = t.id;
+      const st = saved[t.id] || {};
+      const blocked = isBlocked(t) && !st.done;
+      const blockNote = blocked ? ` · ⛔ waits on ${t.blockedBy.join(", ").toUpperCase()}` : "";
+      row.innerHTML = `
+        <input type="checkbox" id="cb-${t.id}" ${st.done ? "checked" : ""} ${blocked ? "disabled" : ""}>
+        <div class="t-body">
+          <label class="t-title" for="cb-${t.id}">${esc(t.title)} <span class="badge owner-${t.owner}">${t.owner === "both" ? "joint" : t.owner}</span></label>
+          <div class="t-meta">${esc(t.id.toUpperCase())} · ${esc(t.meta)}${esc(blockNote)}</div>
+          <div class="t-detail">${esc(t.detail)}</div>
+          <div class="t-actions">
+            ${t.prompt ? `<button class="chip" data-prompt="${encodeURIComponent(t.prompt)}">⌘ copy prompt for agent</button>` : ""}
+            <button class="chip note-toggle">✎ note</button>
+          </div>
+          <textarea class="t-note ${st.note ? "visible" : ""}" placeholder="note for yourself / the agent…">${esc(st.note || "")}</textarea>
+        </div>`;
+      if (blocked) row.classList.add("blocked");
+      ph.appendChild(row);
+    });
+    board.appendChild(ph);
+  });
+  paint();
+}
+
+function persist() {
+  const s = {};
+  document.querySelectorAll(".task").forEach(row => {
+    s[row.dataset.id] = {
+      done: row.querySelector("input").checked,
+      note: row.querySelector(".t-note").value.trim()
+    };
+  });
+  localStorage.setItem(KEY, JSON.stringify(s));
+}
+
+function paint() {
+  let done = 0, total = 0;
+  document.querySelectorAll(".phase").forEach(ph => {
+    let pd = 0, pt = 0;
+    ph.querySelectorAll(".task").forEach(row => {
+      const c = row.querySelector("input").checked;
+      row.classList.toggle("done", c);
+      pd += c; pt++;
+    });
+    ph.querySelector(".pcount").textContent = `${pd}/${pt}`;
+    done += pd; total += pt;
+  });
+  document.getElementById("pct").textContent = `${done}/${total}`;
+  document.getElementById("bar").style.width = (total ? (done / total * 100) : 0) + "%";
+}
+
+board.addEventListener("change", e => {
+  persist();
+  build();   // rebuild so blockedBy dimming reacts to the new state
+});
+board.addEventListener("input", e => { if (e.target.matches(".t-note")) persist(); });
+board.addEventListener("click", e => {
+  const head = e.target.closest(".phase-head");
+  if (head) {
+    const ph = head.parentElement, coll = collapsed();
+    ph.classList.toggle("collapsed");
+    coll[ph.dataset.gi] = ph.classList.contains("collapsed");
+    localStorage.setItem(COLLAPSE_KEY, JSON.stringify(coll));
+    return;
+  }
+  if (e.target.matches(".note-toggle")) {
+    const ta = e.target.closest(".t-body").querySelector(".t-note");
+    ta.classList.toggle("visible");
+    if (ta.classList.contains("visible")) ta.focus();
+  }
+  if (e.target.matches("[data-prompt]")) {
+    navigator.clipboard.writeText(decodeURIComponent(e.target.dataset.prompt)).then(toast);
+  }
+});
+
+document.getElementById("copyStatus").addEventListener("click", () => {
+  persist();
+  const saved = state();
+  const lines = ["## " + DOC_ID + " status sync · " + new Date().toISOString().slice(0, 10), ""];
+  TASKS.forEach(g => {
+    lines.push("### " + g.phase);
+    g.items.forEach(t => {
+      const st = saved[t.id] || {};
+      lines.push(`- [${st.done ? "x" : " "}] ${t.id.toUpperCase()} ${t.title}${st.note ? " — NOTE: " + st.note : ""}`);
+    });
+    lines.push("");
+  });
+  lines.push(`_Paste from ${FILE_HOME} — reconcile and continue._`);
+  navigator.clipboard.writeText(lines.join("\n")).then(toast);
+});
+
+document.getElementById("resetState").addEventListener("click", () => {
+  if (confirm("Clear all checkmarks and notes in this browser?")) {
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(COLLAPSE_KEY);
+    location.reload();
+  }
+});
+
+function toast() {
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+build();
+</script>
+</body>
+</html>
