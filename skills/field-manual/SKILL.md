@@ -53,7 +53,7 @@ Once the user has two or more manuals, offer one more manual that indexes them: 
 - A **registry** section holds a table of every live manual: doc ID, scope, link to the file, and its sync phrase (`<DOC-ID> status sync`). A manual missing from the registry is a bug.
 - Its task board carries the cross-manual backlog: candidate manuals, system upkeep.
 - Mirror the registry somewhere the user already looks — a browser bookmarks folder works well, root board first.
-- **Birth checklist:** a new manual ships its file, a registry row in the root board (bump the root board's Rev letter and date), the bookmark, and a memory entry in one pass — creation isn't done until all four are. If editing the browser's bookmarks requires the browser to be closed (Chromium-family `Bookmarks` JSON does), do the bookmark step BEFORE opening the new manual.
+- **Birth checklist:** a new manual ships its file, a registry row in the root board (bump the root board's Rev letter and date), the bookmark, and — if your environment has persistent memory — a memory entry, all in one pass; creation isn't done until every applicable step is. If editing the browser's bookmarks requires the browser to be closed (Chromium-family `Bookmarks` JSON does), do the bookmark step BEFORE opening the new manual.
 - Retiring or renaming a manual reverses the same steps and needs an explicit user go.
 
 ## Rails (all modes)
