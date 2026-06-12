@@ -38,6 +38,7 @@ Trigger: user pastes a block starting `## <DOC-ID> status sync` (produced by the
 2. Execute the next unchecked `agent`-owned tasks; `both` tasks the agent drives but confirms inputs with the user; `you` tasks are NEVER auto-executed (see rails).
 3. Update the file: edit ONLY the `TASKS` array and any decision sections invalidated by new facts. Bump the Rev letter and date in the masthead. Never change the doc ID — it keys the user's saved state.
 4. Task ids are append-only: never reuse or renumber. A dead task stays with its `detail` prefixed `SUPERSEDED:` rather than being deleted, unless the user asks for removal.
+5. If the user keeps a root board (see Scaling up) and the reconcile changes a manual's scope or status (shipped, retired, renamed), update its registry row there in the same pass.
 
 ### Mode C — Single task
 
@@ -45,11 +46,22 @@ Trigger: user pastes a per-task prompt (the manual's ⌘ chips embed the doc ID 
 
 Execute that task only. Report; suggest the user tick the box. Do not start adjacent tasks.
 
+## Scaling up — a root board for many manuals
+
+Once the user has two or more manuals, offer one more manual that indexes them: a **root board** (suggested doc ID `ROOT-01`). It is an ordinary field manual — same template, same contract — whose job is making every other manual findable.
+
+- A **registry** section holds a table of every live manual: doc ID, scope, link to the file, and its sync phrase (`<DOC-ID> status sync`). A manual missing from the registry is a bug.
+- Its task board carries the cross-manual backlog: candidate manuals, system upkeep.
+- Mirror the registry somewhere the user already looks — a browser bookmarks folder works well, root board first.
+- **Birth checklist:** a new manual ships its file, a registry row in the root board (bump the root board's Rev letter and date), the bookmark, and a memory entry in one pass — creation isn't done until all four are. If editing the browser's bookmarks requires the browser to be closed (Chromium-family `Bookmarks` JSON does), do the bookmark step BEFORE opening the new manual.
+- Retiring or renaming a manual reverses the same steps and needs an explicit user go.
+
 ## Rails (all modes)
 
 - Owner `you` tasks are decisions or credentials — never do them, never simulate them done.
 - Destructive or outward-facing actions (DNS, deletes, sends, purchases) require their explicit go-task to be checked in a status sync or stated by the user in chat.
 - The agent never writes to the user's checkbox/note state; it lives in localStorage, not the file. File updates must keep task `id`s stable so that state survives.
+- Never delete a manual, a root-board registry row, or its bookmark without an explicit user go; doc IDs are immutable forever.
 
 ## Format contract
 
